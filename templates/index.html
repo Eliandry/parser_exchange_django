@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Курсы валют</title>
+</head>
+<body class="container">
+    <form method="POST" action="create/">
+        {% csrf_token %}
+        <h1>Курсы валют</h1>
+        <p>1 Доллар США равен</p>
+        <h2>{{currency_doll}} рублям</h2>
+        <p>{%now "N, j, Y, P"%}</p>
+        <hr>
+        <p>1 Евро равно</p>
+        <h2>{{currency_euro}} рублям</h2>
+        <p>{%now "N, j, Y, P"%}</p>
+        <hr>
+        <h2>Отправка курса на почту</h2>
+        <p>
+            <label>Введите почту</label><br>
+            <input type="email" name="email"/>
+        </p>
+        <p>
+            <label>Введите на сколько должен изменится курс</label><br>
+            <input type="number" name="difference"/>
+
+        </p>
+        <input type="submit" value="Сохранить" >
+    </form>
+</body>
+</html>
