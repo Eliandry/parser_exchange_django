@@ -22,11 +22,19 @@
             <input type="email" name="email"/>
         </p>
         <p>
-            <label>Введите на сколько должен изменится курс</label><br>
-            <input type="number" name="difference"/>
-
+            <label>Введите время</label><br>
+            <input type="time" name="time"/>
         </p>
         <input type="submit" value="Сохранить" >
     </form>
+    {% if people.count > 0 %}
+    <h2>Список пользователей</h2>
+    <table>
+        <tr><th>email</th><td>   </td><th>время</th></tr>
+        {% for person in people %}
+        <tr><td>{{ person.email }}</td><td>   </td> <td>{{ person.time }}</td></tr>
+        {% endfor %}
+    </table>
+    {% endif %}
 </body>
 </html>

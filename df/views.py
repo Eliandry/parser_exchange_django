@@ -1,7 +1,6 @@
 from django.shortcuts import render
 from django.http import HttpResponseRedirect
 from .models import Person
-from .forms import UserForm
 import requests
 from bs4 import BeautifulSoup
 import time
@@ -77,12 +76,12 @@ currency = Currency()
 def index(request):
     ans_doll = currency.check_doll()
     ans_euro = currency.check_euro()
-    userform = UserForm()
-    return render(request, "index.html", {"currency_doll": ans_doll,"currency_euro":ans_euro,"people":userform})
+    people=Person.objects.all()
+    return render(request, "index.html", {"currency_doll": ans_doll,"currency_euro":ans_euro,"people":people})
 def create_email(request):
     if request.method=="POST":
         peo=Person()
         peo.email=request.POST.get("email")
-        peo.diff=request.POST.get("difference")
+        peo.time = request.POST.get("time")
         peo.save()
     return HttpResponseRedirect("/")
