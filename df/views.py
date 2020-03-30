@@ -4,6 +4,7 @@ from .models import Person
 import requests
 from bs4 import BeautifulSoup
 import time
+import schedule
 import smtplib
 
 
@@ -34,39 +35,23 @@ class Currency:
 
     def check_doll(self):
         currency_doll = float(self.get_price_doll().replace(",", "."))
-        if currency_doll >= self.converted_price_doll + self.diff:
-            print("курс доллара сильно вырос")
-            self.mail()
-        elif currency_doll <= self.converted_price_doll - self.diff:
-            print("курс доллара сильно упал")
-            self.mail()
+        send_email()
         return currency_doll
 
     def check_euro(self):
         currency_euro = float(self.get_price_euro().replace(",", "."))
-        if currency_euro >= self.converted_price_euro + self.diff:
-            print("курс евро сильно вырос")
-            self.mail()
-        elif currency_euro <= self.converted_price_euro - self.diff:
-            print("курс евро сильно упал")
-            self.mail()
         return currency_euro
 
-    def mail(self):
+    def mail(self, email):
         server = smtplib.SMTP('smtp.gmail.com', 587)
         server.ehlo()
         server.starttls()
         server.ehlo()
-        server.login('example@gmail.com', 'fwefgwavawvr')
         subject = 'Курс валют'
-        body = 'курс валют сильно изменился'
+        body = 'курс валют на сегодня: 1$ = {0} , 1€ = {1}'.format(self.check_doll(), self.check_euro())
         message = f'Subject: {subject}\n\n{body}'
-        server.sendmail(
-            'example.com',
-            'example@gmail.com',
-            message
+        server.sendmail('example.com', email, message)
 
-        )
         server.quit()
 
 
@@ -76,12 +61,24 @@ currency = Currency()
 def index(request):
     ans_doll = currency.check_doll()
     ans_euro = currency.check_euro()
-    people=Person.objects.all()
-    return render(request, "index.html", {"currency_doll": ans_doll,"currency_euro":ans_euro,"people":people})
+    people = Person.objects.all()
+    return render(request, "index.html", {"currency_doll": ans_doll, "currency_euro": ans_euro, "people": people})
+
+
 def create_email(request):
-    if request.method=="POST":
-        peo=Person()
-        peo.email=request.POST.get("email")
+    if request.method == "POST":
+        peo = Person()
+        peo.email = request.POST.get("email")
         peo.time = request.POST.get("time")
         peo.save()
     return HttpResponseRedirect("/")
+
+
+def send_email():
+    people = Person.objects.all()
+    if people.count:
+        for person in people:
+            schedule.every().day.at(person.time).do(currency.mail(person.email))
+            while True:
+                schedule.run_pending()
+                time.sleep(1800)
