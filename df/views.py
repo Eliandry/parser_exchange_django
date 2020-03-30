@@ -35,7 +35,6 @@ class Currency:
 
     def check_doll(self):
         currency_doll = float(self.get_price_doll().replace(",", "."))
-        send_email()
         return currency_doll
 
     def check_euro(self):
@@ -79,6 +78,6 @@ def send_email():
     if people.count:
         for person in people:
             schedule.every().day.at(person.time).do(currency.mail(person.email))
-            while True:
-                schedule.run_pending()
-                time.sleep(1800)
+
+            schedule.run_pending()
+            time.sleep(1800)

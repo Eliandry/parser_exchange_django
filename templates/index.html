@@ -3,36 +3,83 @@
 <head>
     <meta charset="UTF-8">
     <title>Курсы валют</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+
+    <style>
+          .header-h1 h1 {
+            padding-bottom: .200rem;
+            border-top: .200rem solid #000;
+            border-bottom: .200rem solid #000;
+            font-size: 2rem;
+            text-transform: uppercase;
+            text-align: center;
+          }
+          .header-h1-left h1 {
+            text-align: left;
+          }
+          .header-h1-right h1 {
+            text-align: right;
+          }
+          .header-h2 h2 {
+            padding-bottom: .125rem;
+            border-top: .125rem solid #000;
+            border-bottom: .125rem solid #000;
+            font-size: 1.25rem;
+            text-transform: uppercase;
+            text-align: center;
+          }
+          .header-h2-left h2 {
+            text-align: left;
+          }
+          .header-h2-right h2 {
+            text-align: right;
+          }
+    </style>
 </head>
 <body class="container">
     <form method="POST" action="create/">
         {% csrf_token %}
-        <h1>Курсы валют</h1>
-        <p>1 Доллар США равен</p>
-        <h2>{{currency_doll}} рублям</h2>
-        <p>{%now "N, j, Y, P"%}</p>
-        <hr>
-        <p>1 Евро равно</p>
-        <h2>{{currency_euro}} рублям</h2>
-        <p>{%now "N, j, Y, P"%}</p>
-        <hr>
-        <h2>Отправка курса на почту</h2>
-        <p>
-            <label>Введите почту</label><br>
-            <input type="email" name="email"/>
-        </p>
-        <p>
-            <label>Введите время</label><br>
-            <input type="time" name="time"/>
-        </p>
-        <input type="submit" value="Сохранить" >
+        <div class="header-h1 header-h1-left">
+            <h1>Курсы валют</h1>
+        </div>
+        <div class="row">
+        <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
+            <p>1 Доллар США равен</p>
+            <h2>{{currency_doll}} рублям</h2>
+            <p>{%now "N, j, Y, P"%}</p>
+        </div>
+        <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
+            <p>1 Евро равно</p>
+            <h2>{{currency_euro}} рублям</h2>
+            <p>{%now "N, j, Y, P"%}</p>
+        </div>
+        </div>
+        <div class="header-h2 header-h2-left">
+            <h2>Отправка курса на почту</h2>
+        </div>
+
+            <p>
+                <label>Введите почту</label><br>
+                <input type="email" name="email"/>
+            </p>
+            <p>
+                <label>Введите время</label><br>
+                <input type="time" name="time"/>
+            </p>
+            <input type="submit" value="Сохранить" >
+            <p>      </p>
     </form>
     {% if people.count > 0 %}
-    <h2>Список пользователей</h2>
+        <div class="header-h2 header-h2-left">
+            <h2>Список пользователей</h2>
+        </div>
     <table>
-        <tr><th>email</th><td>   </td><th>время</th></tr>
+        <tr><th>№</th><th>email</th><th>время</th></tr>
         {% for person in people %}
-        <tr><td>{{ person.email }}</td><td>   </td> <td>{{ person.time }}</td></tr>
+        <tr><td>{{person.id}}</td><td>{{ person.email }}</td><td>{{ person.time }}</td></tr>
         {% endfor %}
     </table>
     {% endif %}
