@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from django.http import HttpResponseRedirect
-from .models import Person, Corren , Corren_euro
+from .models import Person, Corren, Corren_euro
 import requests
 from bs4 import BeautifulSoup
 import time
@@ -48,26 +48,26 @@ class Currency:
 
 
 currency = Currency()
-def create_currency_in_bd(dol=currency.check_doll(),euro=currency.check_euro()):
-    global time
+
+
+def create_currency_in_bd(dol=currency.check_doll(), euro=currency.check_euro()):
     Corren.objects.create(doll=dol)
     Corren_euro.objects.create(euro=euro)
 
-def index(request):
-    h=None
-    f=Corren.objects.all()
-    h=[i for i in f]
 
+def index(request):
     create_currency_in_bd()
+
     people = Person.objects.all()
-    try:
-        a=Corren.objects.get(id=len(h)-1)
-        b=Corren_euro.objects.get(id=len(h)-1)
-    except:
-        create_currency_in_bd()
-        return HttpResponseRedirect('/')
-    ans_doll = a.doll
-    ans_euro = b.euro
+    doll_all = Corren.objects.all()
+    euro_all = Corren_euro.objects.all()
+
+    doll_list = [i for i in doll_all]
+    euro_list = [i for i in euro_all]
+
+    ans_doll = doll_list[-1].doll
+    ans_euro = euro_list[-1].euro
+
     return render(request, "index.html", {"currency_doll": ans_doll, "currency_euro": ans_euro, "people": people})
 
 
